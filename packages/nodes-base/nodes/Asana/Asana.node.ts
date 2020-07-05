@@ -572,7 +572,7 @@ export class Asana implements INodeType {
 			} else {
 				throw new Error(`The resource "${resource}" is not known!`);
 			}
-			const responseData = await asanaApiRequest.call(this, requestMethod, endpoint, body);
+			const responseData = await asanaApiRequest.call(this, requestMethod, endpoint, body, qs);
 
 			returnData.push(responseData.data as IDataObject);
 		}
