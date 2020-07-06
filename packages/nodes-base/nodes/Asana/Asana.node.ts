@@ -671,6 +671,19 @@ export class Asana implements INodeType {
 					const searchTaskProperties = this.getNodeParameter('searchTaskProperties', i) as IDataObject;
 					Object.assign(qs, searchTaskProperties);
 
+				} else if (operation === 'moveToSection') {
+					// ----------------------------------
+					//         task:move to section
+					// ----------------------------------
+
+					const sectionId = this.getNodeParameter('section', i) as string;
+
+					requestMethod = 'POST';
+					endpoint = `sections/${sectionId}/addTask`;
+
+					body.task = this.getNodeParameter('id', i) as string;
+					Object.assign(body);
+
 				} else {
 					throw new Error(`The operation "${operation}" is not known!`);
 				}
