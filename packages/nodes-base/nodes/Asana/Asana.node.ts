@@ -458,6 +458,34 @@ export class Asana implements INodeType {
 				}
 
 				return returnData;
+			},
+			// Get all the available projects to display them to user so that they can be
+			// selected easily
+			async getProjects(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const endpoint = "projects"
+				const responseData = await asanaApiRequest.call(this, 'GET', endpoint, {});
+
+				if (responseData.data === undefined) {
+					throw new Error('No data got returned');
+				}
+
+				const returnData: INodePropertyOptions[] = [];
+				for (const projectData of responseData.data) {
+					if (projectData.resource_type !== 'project') {
+						// Not sure if for some reason also ever other resources
+						// get returned but just in case filter them out
+						continue;
+					}
+					const projectName = projectData.name;
+					const projectId = projectData.gid;
+
+					returnData.push({
+						name: projectName,
+						value: projectId,
+					});
+				}
+
+				return returnData;
 			}
 		},
 	};
