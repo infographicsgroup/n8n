@@ -860,6 +860,30 @@ export class Asana implements INodeType {
 				} else {
 					throw new Error(`The operation "${operation}" is not known!`);
 				}
+			} else if (resource === 'project') {
+				if (operation === 'get') {
+					// ----------------------------------
+					//         project:get
+				 	// ----------------------------------
+
+				 	const projectId = this.getNodeParameter('projectId', i) as string;
+
+					requestMethod = 'GET';
+					endpoint = `projects/${projectId}`;
+
+				} else if (operation === 'getAll') {
+				 	// ----------------------------------
+				 	//         project:getAll
+					// ----------------------------------
+					requestMethod = 'GET';
+					endpoint = `projects`;
+
+					const filterProjectProperties = this.getNodeParameter('filterProjectProperties', i) as IDataObject;
+					Object.assign(qs, filterProjectProperties);
+
+				} else {
+					throw new Error(`The operation "${operation}" is not known!`);
+				}
 			} else {
 				throw new Error(`The resource "${resource}" is not known!`);
 			}
