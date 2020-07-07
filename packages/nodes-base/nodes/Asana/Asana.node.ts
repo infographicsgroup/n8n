@@ -506,6 +506,124 @@ export class Asana implements INodeType {
 				},
 				description: 'The workspace in which to get users.',
 			},
+
+
+			// ----------------------------------
+			//         project
+			// ----------------------------------
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				displayOptions: {
+					show: {
+						resource: [
+							'project',
+						],
+					},
+				},
+				options: [
+					{
+						name: 'Get All',
+						value: 'getAll',
+						description: 'Get compact project records for filtered set of projects',
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						description: 'Get data of a specific project',
+					},
+				],
+				default: 'get',
+				description: 'The operation to perform',
+			},
+
+			// ----------------------------------
+			//         project:get
+			// ----------------------------------
+			{
+				displayName: 'Id',
+				name: 'projectId',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: [
+							'get',
+						],
+						resource: [
+							'project',
+						],
+					},
+				},
+				description: 'Globally unique identifier for the project',
+			},
+
+			// ----------------------------------
+			//         project:getAll
+			// ----------------------------------
+			{
+				displayName: 'Workspace',
+				name: 'workspace',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getWorkspaces',
+				},
+				options: [],
+				default: '',
+				displayOptions: {
+					show: {
+						operation: [
+							'getAll',
+						],
+						resource: [
+							'project',
+						],
+					},
+				},
+				description: 'The workspace to filter projects on',
+			},
+			{
+				displayName: 'Filter Properties',
+				name: 'filterProjectProperties',
+				type: 'collection',
+				displayOptions: {
+					show: {
+						operation: [
+							'getAll',
+						],
+						resource: [
+							'project',
+						],
+					},
+				},
+				default: {},
+				description: 'Use one or more of the parameters to filter the projects',
+				placeholder: 'Add filter scope',
+				options: [
+					{
+						displayName: 'Archived',
+						name: 'archived',
+						type: 'boolean',
+						default: false,
+						description: 'Only return projects whose `archived` field has this value',
+					},
+					{
+						displayName: 'Team',
+						name: 'team',
+						type: "multiOptions",
+						typeOptions: {
+							loadOptionsMethod: 'getTeams',
+							loadOptionsDependsOn: [
+								'workspace',
+							],
+						},
+						default: '',
+						description: 'The team to filter projects on',
+					},
+				],
+			},
 		],
 	};
 
