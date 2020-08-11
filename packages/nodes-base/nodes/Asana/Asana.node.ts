@@ -106,6 +106,11 @@ export class Asana implements INodeType {
 						description: 'Add a tag to a task',
 					},
 					{
+						name: 'Remove Tag',
+						value: 'removeTag',
+						description: 'Remove a tag from a task',
+					},
+					{
 						name: 'Move',
 						value: 'moveToSection',
 						description: 'Move task to section',
@@ -333,6 +338,50 @@ export class Asana implements INodeType {
 					},
 				},
 				description: 'The tag that should be added',
+			},
+
+			// ----------------------------------
+			//         task:remove tag
+			// ----------------------------------
+			{
+				displayName: 'Task ID',
+				name: 'id',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: [
+							'removeTag',
+						],
+						resource: [
+							'task',
+						],
+					},
+				},
+				description: 'The ID of the task to remove the tag from',
+			},
+			{
+				displayName: 'Tags',
+				name: 'tag',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getTags',
+				},
+				options: [],
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: [
+							'removeTag',
+						],
+						resource: [
+							'task',
+						],
+					},
+				},
+				description: 'The tag that should be removed',
 			},
 
 			// ----------------------------------
@@ -930,6 +979,19 @@ export class Asana implements INodeType {
 
 					requestMethod = 'POST';
 					endpoint = `tasks/${taskId}/addTag`;
+
+					body.tag = this.getNodeParameter('tag', i) as string;
+					Object.assign(body);
+
+				} else if (operation === 'removeTag') {
+					// ----------------------------------
+					//         task:remove tag
+					// ----------------------------------
+
+					const taskId = this.getNodeParameter('id', i) as string;
+
+					requestMethod = 'POST';
+					endpoint = `tasks/${taskId}/removeTag`;
 
 					body.tag = this.getNodeParameter('tag', i) as string;
 					Object.assign(body);
