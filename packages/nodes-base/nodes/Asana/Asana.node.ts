@@ -101,6 +101,11 @@ export class Asana implements INodeType {
 						description: 'Search for tasks',
 					},
 					{
+						name: 'Add Comment',
+						value: 'addComment',
+						description: 'Add a comment (story) to a task',
+					},
+					{
 						name: 'Add Tag',
 						value: 'addTag',
 						description: 'Add a tag to a task',
@@ -292,6 +297,77 @@ export class Asana implements INodeType {
 						type: 'boolean',
 						default: false,
 						description: 'If the task is marked completed.',
+					},
+				],
+			},
+
+			// ----------------------------------
+			//         task:add comment (story in Asana speech)
+			// ----------------------------------
+			{
+				displayName: 'Task ID',
+				name: 'id',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: [
+							'addComment',
+						],
+						resource: [
+							'task',
+						],
+					},
+				},
+				description: 'The ID of the task to add the comment to',
+			},
+			{
+				displayName: 'Comment Properties',
+				name: 'commentProperties',
+				type: 'collection',
+				displayOptions: {
+					show: {
+						operation: [
+							'addComment',
+						],
+						resource: [
+							'task',
+						],
+					},
+				},
+				default: {},
+				description: 'Properties of the task comment',
+				placeholder: 'Add comment details',
+				options: [
+					{
+						displayName: 'Text',
+						name: 'text',
+						type: 'string',
+						typeOptions: {
+							alwaysOpenEditWindow: true,
+							rows: 5,
+						},
+						default: '',
+						description: 'Comment in plain text. Do not use together with HTML Text.',
+					},
+					{
+						displayName: 'HTML Text',
+						name: 'html_text',
+						type: "string",
+						typeOptions: {
+							alwaysOpenEditWindow: true,
+							rows: 5,
+						},
+						default: '<body>This is a comment</body>',
+						description: 'Comment as HTML string. Do not use together with plain text.',
+					},
+					{
+						displayName: 'Pinned',
+						name: 'is_pinned',
+						type: 'boolean',
+						default: false,
+						description: 'Pin the comment.',
 					},
 				],
 			},
@@ -1002,6 +1078,19 @@ export class Asana implements INodeType {
 
 					const searchTaskProperties = this.getNodeParameter('searchTaskProperties', i) as IDataObject;
 					Object.assign(qs, searchTaskProperties);
+
+				} else if (operation === 'addComment') {
+					// ----------------------------------
+					//         task:add comment
+					// ----------------------------------
+
+					const taskId = this.getNodeParameter('id', i) as string;
+
+					requestMethod = 'POST';
+					endpoint = `tasks/${taskId}/stories`;
+
+					const commentProperties = this.getNodeParameter('commentProperties', i) as IDataObject;
+					Object.assign(body, commentProperties);
 
 				} else if (operation === 'addTag') {
 					// ----------------------------------
